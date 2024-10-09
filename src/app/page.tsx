@@ -1,95 +1,70 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+// "use client";
+
+// import { useEffect, useState } from "react";
 
 export default function Home() {
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="grid grid-cols-[3fr_1fr] w-3/4 mx-auto gap-4 ">
+      <HighLights />
+      <div className="w-full h-full text-lg font-semibold">Editors' Picks</div>
+      <div className="flex flex-col gap-8 row-start-2 w-[85%]">
+        <Post />
+        <Post />
+        <Post />
+      </div>
+    </div>
+  );
+}
+
+const highlightCards = [
+  { color: "bg-blue-400" },
+  { color: "bg-orange-400" },
+  { color: "bg-zinc-400" },
+  { color: "bg-purple-400" },
+  { color: "bg-red-400" },
+];
+
+function HighLights() {
+  // const [active, setActive] = useState(0);
+  // useEffect(() => {
+  //   const changeCard = setInterval(() => {
+  //     setActive(active + (1 % 6));
+  //   }, 1000);
+
+  //   return () => {
+  //     clearInterval(changeCard);
+  //   };
+  // }, [active, setActive]);
+
+  return (
+    <div className="col-span-2">
+      <p className="text-3xl font-bold mb-2">Highlights of The Week</p>
+      <section className="grid h-[25rem] grid-cols-4 gap-2 mb-4 transition-all">
+        {highlightCards.map((card, i) => (
+          <div
+            key={i}
+            className={`${card.color} w-full rounded-xl ${
+              i === 0 && "col-start-1 col-end-3 row-start-1 row-end-4"
+            } ${i === 1 && "col-start-3 col-end-4 row-start-1 row-end-3"} ${
+              i === 2 && "col-start-4 col-end-5 row-start-2 row-end-4"
+            }`}
           >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+            {i}
+          </div>
+        ))}
+      </section>
+    </div>
+  );
+}
+
+function Post() {
+  return (
+    <div className="w-full flex flex-col gap-2">
+      <div className="w-full h-16 rounded-t-lg bg-black"></div>
+      <div className="text-xl font-medium">
+        Random blog post made by the best player in the world
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+      <div className="mt-2">Some random description about the post</div>
+    </div>
   );
 }
