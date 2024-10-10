@@ -1,16 +1,23 @@
 // "use client";
 
+import { getAllBlogs } from "@/db/blogs";
+
 // import { useEffect, useState } from "react";
 
-export default function Home() {
+export default async function Home() {
+  const blogPosts = await getAllBlogs();
   return (
-    <div className="grid grid-cols-[3fr_1fr] w-3/4 mx-auto gap-4 ">
+    <div className="grid grid-cols-[3fr_1fr] max-w-[75rem] mx-auto gap-4 ">
       <HighLights />
       <div className="w-full h-full text-lg font-semibold">Editors' Picks</div>
-      <div className="flex flex-col gap-8 row-start-2 w-[85%]">
-        <Post />
-        <Post />
-        <Post />
+      <div className="flex flex-col gap-8 row-start-2 max-w-[50rem]">
+        {blogPosts.map((blog) => (
+          <Post
+            key={blog.id}
+            title={blog.title}
+            description={blog.description}
+          />
+        ))}
       </div>
     </div>
   );
@@ -57,14 +64,12 @@ function HighLights() {
   );
 }
 
-function Post() {
+function Post({ title, description }: { title: string; description: string }) {
   return (
     <div className="w-full flex flex-col gap-2">
       <div className="w-full h-16 rounded-t-lg bg-black"></div>
-      <div className="text-xl font-medium">
-        Random blog post made by the best player in the world
-      </div>
-      <div className="mt-2">Some random description about the post</div>
+      <div className="text-xl font-medium">{title}</div>
+      <div className="mt-2">{description}</div>
     </div>
   );
 }

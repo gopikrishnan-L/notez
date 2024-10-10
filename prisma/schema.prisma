@@ -14,13 +14,14 @@ datasource db {
 }
 
 model Blog {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title     String   @db.VarChar(255)
-  content   String?
-  creator   User     @relation(fields: [creatorId], references: [id])
-  creatorId String
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  title       String   @db.VarChar(255)
+  description String
+  content     String?
+  creator     User     @relation(fields: [creatorId], references: [id])
+  creatorId   String
 }
 
 model Profile {
