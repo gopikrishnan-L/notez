@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Lato, Lora, Rubik } from "next/font/google";
+import { Rubik } from "next/font/google";
 import "./globals.css";
 import { auth, signIn } from "@/lib/auth";
 import Navbar from "../components/navbar/Navbar";
@@ -29,11 +29,11 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${playfair.variable} min-h-screen bg-gray-100`}>
-        <div className="min-h-screen w-full">
+      <body className={`${playfair.variable} min-h-screen`}>
+        <div className="min-h-screen max-w-[75rem] mx-auto bg-mainbg">
           <Navbar session={session} />
           <main>
-            <div className="pt-4 pb-4">{children}</div>
+            <div className="mt-8 mb-4">{children}</div>
           </main>
         </div>
       </body>

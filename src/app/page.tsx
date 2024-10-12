@@ -7,11 +7,11 @@ import { getAllBlogs } from "@/db/blogs";
 export default async function Home() {
   const blogPosts = await getAllBlogs();
   return (
-    <div className="grid grid-cols-[3fr_1fr] max-w-[75rem] mx-auto gap-4 ">
+    <div className="grid grid-cols-[3fr_1fr] max-w-[75rem] mx-auto gap-4 max-xl:max-w-[60rem] max-lg:max-w-[40rem] max-lg:grid-cols-1">
       <HighLights />
       <div className="w-full h-full text-lg font-semibold">Editors' Picks</div>
-      <div className="flex flex-col gap-8 row-start-2 max-w-[50rem]">
-        {blogPosts.map((blog) => (
+      <div className="grid grid-cols-3 gap-4 flex-wrap max-w-[50rem] max-lg:w-full lg:row-start-2">
+        {blogPosts.map((blog, i) => (
           <Post
             key={blog.id}
             title={blog.title}
@@ -24,11 +24,10 @@ export default async function Home() {
 }
 
 const highlightCards = [
-  { color: "bg-blue-400" },
-  { color: "bg-orange-400" },
-  { color: "bg-zinc-400" },
-  { color: "bg-purple-400" },
-  { color: "bg-red-400" },
+  { color: "bg-[#EBEEF3]" },
+  { color: "bg-[#E1E8F0]" },
+  { color: "bg-[#EBEEF3]" },
+  { color: "bg-[#E1E8F0]" },
 ];
 
 function HighLights() {
@@ -44,16 +43,14 @@ function HighLights() {
   // }, [active, setActive]);
 
   return (
-    <div className="col-span-2">
-      <p className="text-3xl font-bold mb-2">Highlights of The Week</p>
-      <section className="grid h-[25rem] grid-cols-4 gap-2 mb-4 transition-all">
+    <div className="lg:col-span-2 mb-8">
+      {/* <p className="text-3xl font-bold mb-2">Highlights of The Week</p> */}
+      <section className="grid h-[35rem] grid-cols-[3fr_1fr] gap-2 mb-4 transition-all">
         {highlightCards.map((card, i) => (
           <div
             key={i}
             className={`${card.color} w-full rounded-xl ${
-              i === 0 && "col-start-1 col-end-3 row-start-1 row-end-4"
-            } ${i === 1 && "col-start-3 col-end-4 row-start-1 row-end-3"} ${
-              i === 2 && "col-start-4 col-end-5 row-start-2 row-end-4"
+              i === 0 && "row-span-3"
             }`}
           >
             {i}
@@ -66,10 +63,19 @@ function HighLights() {
 
 function Post({ title, description }: { title: string; description: string }) {
   return (
-    <div className="w-full flex flex-col gap-2">
-      <div className="w-full h-16 rounded-t-lg bg-black"></div>
-      <div className="text-xl font-medium">{title}</div>
-      <div className="mt-2">{description}</div>
+    <div className="group relative w-full h-[22rem] rounded-lg overflow-clip ">
+      <img
+        src="https://images.pexels.com/photos/28494944/pexels-photo-28494944/free-photo-of-creative-portrait-with-mirror-reflection-in-berlin.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        alt="blog-pic"
+        className="object-contain"
+      />
+      <div className="w-full absolute bottom-0 p-4 bg-[linear-gradient(hsl(0_0%_0%/0),hsl(20_0%_0%/0.3)_20%,hsl(0_0%_0%/1))]">
+        {/* //translate-y-[50%] transition-all group-hover:translate-y-0 */}
+        <div className="max-h-[10ch] text-lg text-white mb-2">{title}</div>
+        <div className="max-h-0  text-sm group-hover:max-h-[14ch] text-white opacity-0 group-hover:opacity-100 transition-all duration-500 ease-[cubic-bezier(1,0,0,.5)]  delay-100">
+          {description}
+        </div>
+      </div>
     </div>
   );
 }
