@@ -4,8 +4,8 @@ export async function getAllBlogs() {
   return await prisma.blog.findMany();
 }
 
-export async function getBlogById(blogId: string) {
-  return await prisma.blog.findUnique({ where: { id: blogId } });
+export async function getBlogById(id: string) {
+  return await prisma.blog.findUnique({ where: { id } });
 }
 
 export async function getBlogsByUserId(userId: string) {

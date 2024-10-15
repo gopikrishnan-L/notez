@@ -19,7 +19,7 @@ export default function UserControl({ picture }: { picture: string }) {
         <DropdownMenuTrigger asChild>
           <div className="w-10 aspect-square rounded-full bg-white">
             <Image
-              src="https://lh3.googleusercontent.com/a/ACg8ocLaO7bYdd9mzKBzUMnqmPKsagW0wbx1xiAYfUa4WjRHx5Y7_3w=s96-c"
+              src={picture}
               className="rounded-full"
               alt=""
               width={40}

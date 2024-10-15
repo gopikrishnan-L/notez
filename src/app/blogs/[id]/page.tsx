@@ -1,7 +1,7 @@
 import { getBlogById } from "@/db/blogs";
 import { getUserAsCreator } from "@/db/users";
 
-export default async function Blog({ params }: { params: { id: string } }) {
+export default async function BlogPage({ params }: { params: { id: string } }) {
   const blog = await getBlogById(params.id);
   let creator;
   if (blog) {
