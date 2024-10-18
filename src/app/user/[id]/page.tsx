@@ -8,20 +8,24 @@ export default async function UserPage({ params }: { params: { id: string } }) {
     blogsFlag: true,
   });
   return (
-    <div className="grid grid-cols-[3fr_1fr] gap-4 max-w-[70rem] mx-auto max-xl:max-w-[60rem] max-lg:max-w-[40rem]">
+    <div className="grid grid-cols-[3fr_1fr] gap-4 max-w-[75rem] mx-auto max-xl:max-w-[60rem] max-lg:max-w-[40rem]">
       <div className="h-full w-full">
-        <h2 className="text-xl font-medium mb-4">{user?.name}'s Blogposts</h2>
+        <h2 className="text-xl font-medium mb-4 p-2">
+          {user?.name}'s Blogposts
+        </h2>
         <div className="grid grid-cols-3 gap-2 max-lg:w-full">
-          {user?.blogs.map((blog) => (
-            <Post
-              key={blog.id}
-              title={blog.title}
-              description={blog.description}
-              creatorId={blog.creatorId}
-              date={blog.createdAt}
-              postUrl={`/blogs/${blog.id}`}
-            />
-          ))}
+          {user?.blogs &&
+            user?.blogs.map((blog) => (
+              <Post
+                key={blog.id}
+                title={blog.title}
+                description={blog.description}
+                categories={blog.categories}
+                creatorId={blog.creatorId}
+                date={blog.createdAt}
+                postUrl={`/blog/${blog.id}`}
+              />
+            ))}
         </div>
       </div>
       {user && (

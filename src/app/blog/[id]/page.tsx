@@ -1,5 +1,6 @@
 import { getBlogById } from "@/db/blogs";
 import { getUserAsCreator } from "@/db/users";
+import Link from "next/link";
 
 export default async function BlogPage({ params }: { params: { id: string } }) {
   const blog = await getBlogById(params.id);
@@ -14,11 +15,15 @@ export default async function BlogPage({ params }: { params: { id: string } }) {
         <h2 className="text-4xl font-bold">{blog?.title}</h2>
         <h3 className="text-2xl mt-4 font-light">{blog?.description}</h3>
         <section className="flex mt-8 gap-2 pt-2 items-center w-fit">
-          <div className="w-10 aspect-square rounded-full overflow-hidden bg-gray-700">
-            <img src={creator?.image!} alt={creator?.name!} />
-          </div>
+          <Link href={`/user/${creator?.id}`}>
+            <div className="w-10 aspect-square rounded-full overflow-hidden bg-gray-700">
+              <img src={creator?.image!} alt={creator?.name!} />
+            </div>
+          </Link>
           <div className="flex flex-col gap-1">
-            <span className="text-sm">{creator?.name}</span>
+            <Link href={`/user/${creator?.id}`}>
+              <span className="text-sm">{creator?.name}</span>
+            </Link>
             <span className="ml-auto text-xs opacity-75">
               {blog?.createdAt.toLocaleString("default", { month: "long" }) +
                 " " +

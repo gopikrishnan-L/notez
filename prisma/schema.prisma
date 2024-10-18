@@ -19,6 +19,7 @@ model Blog {
   updatedAt   DateTime @updatedAt
   title       String   @db.VarChar(255)
   description String
+  categories  String[]
   content     String?
   creator     User     @relation(fields: [creatorId], references: [id])
   creatorId   String
@@ -45,11 +46,6 @@ model User {
   updatedAt     DateTime  @updatedAt
 }
 
-enum Role {
-  USER
-  ADMIN
-}
-
 model Account {
   userId            String
   type              String
@@ -69,4 +65,9 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
+}
+
+enum Role {
+  USER
+  ADMIN
 }

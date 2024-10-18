@@ -15,9 +15,10 @@ export default async function HomePage() {
             key={blog.id}
             title={blog.title}
             description={blog.description}
+            categories={blog.categories}
             creatorId={blog.creatorId}
             date={blog.createdAt}
-            postUrl={`/blogs/${blog.id}`}
+            postUrl={`/blog/${blog.id}`}
           />
         ))}
       </div>

@@ -30,8 +30,8 @@ export default function NavLinks() {
           <span
             className={`${
               path === nav.link
-                ? "font-semibold"
-                : "opacity-60 after:absolute after:bottom-0 after:h-[1px] after:w-full after:bg-black after:z-1 after:left-0 after:scale-0 after:hover:scale-100 after:transition-transform after:origin-left after:duration-200   "
+                ? "after:absolute after:bottom-0 after:h-[1px] after:w-full after:bg-black after:z-1 after:left-0 after:scale-100 after:transition-transform after:origin-left after:duration-200"
+                : "opacity-60 after:absolute after:bottom-0 after:h-[1px] after:w-full after:bg-black after:z-1 after:left-0 after:scale-0 after:hover:scale-100 after:transition-transform after:origin-left after:duration-200"
             } relative hover:opacity-100 transition-opacity`}
           >
             {nav.name}

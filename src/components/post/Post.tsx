@@ -4,12 +4,14 @@ import Link from "next/link";
 export default async function Post({
   title,
   description,
+  categories = [],
   creatorId,
   date,
   postUrl = "/",
 }: {
   title: string;
   description: string;
+  categories: string[];
   creatorId: string;
   date: Date;
   postUrl: string;
@@ -25,9 +27,15 @@ export default async function Post({
           <img src={""} alt="" className="object-cover" />
         </Link>
         <div className="flex flex-col gap-2 px-2 flex-1">
-          <section className=" mt-2 mb-2 text-xs font-medium p-1 bg-violet-100 text-violet-600 w-fit rounded-md">
-            Tag/Genre
-          </section>
+          <div className="flex gap-1 mt-2 text-xs font-medium text-violet-600 w-fit h-fit">
+            {categories.map((category) => (
+              <Link href={`/category/${category}`} key={category}>
+                <section className=" p-1 bg-violet-100 w-fit rounded-md">
+                  {category}
+                </section>
+              </Link>
+            ))}
+          </div>
           <Link href={postUrl} className="cursor-pointer">
             <p className="text-lg h-[2ch] font-semibold mb-2 line-clamp-1">
               {title}
@@ -36,7 +44,7 @@ export default async function Post({
           </Link>
           <div className="mt-auto pt-2 flex gap-2 items-center text-xs">
             <Link
-              href={`/users/${creator?.id}`}
+              href={`/user/${creator?.id}`}
               className="flex gap-2 items-center"
             >
               <div className="w-8 aspect-square rounded-full overflow-hidden bg-gray-700">
