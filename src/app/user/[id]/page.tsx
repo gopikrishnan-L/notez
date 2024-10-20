@@ -4,8 +4,8 @@ import Image from "next/image";
 
 export default async function UserPage({ params }: { params: { id: string } }) {
   const user = await getUserById(params.id, {
-    profileFlag: true,
-    blogsFlag: true,
+    includeProfile: true,
+    includeBlogs: true,
   });
   return (
     <div className="grid grid-cols-[3fr_1fr] gap-4 max-w-[75rem] mx-auto max-xl:max-w-[60rem] max-lg:max-w-[40rem]">

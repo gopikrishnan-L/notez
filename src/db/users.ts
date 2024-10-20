@@ -2,12 +2,12 @@ import prisma from "@/lib/db";
 
 export async function getUserById(
   id: string,
-  options: { profileFlag?: boolean; blogsFlag?: boolean } = {}
+  options: { includeProfile?: boolean; includeBlogs?: boolean } = {}
 ) {
-  const { profileFlag = false, blogsFlag = false } = options;
+  const { includeProfile = false, includeBlogs = false } = options;
   return await prisma.user.findUnique({
     where: { id },
-    include: { profile: profileFlag, blogs: blogsFlag },
+    include: { profile: includeProfile, blogs: includeBlogs },
   });
 }
 

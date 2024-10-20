@@ -14,15 +14,23 @@ datasource db {
 }
 
 model Blog {
-  id          String   @id @default(uuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  title       String   @db.VarChar(255)
+  id          String    @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  title       String    @db.VarChar(255)
   description String
   categories  String[]
+  channels    Channel[]
   content     String?
-  creator     User     @relation(fields: [creatorId], references: [id])
+  creator     User      @relation(fields: [creatorId], references: [id])
   creatorId   String
+}
+
+model Channel {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+  blogs       Blog[]
 }
 
 model Profile {
