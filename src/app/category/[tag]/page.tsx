@@ -15,6 +15,7 @@ export default async function CategoryPage({
       </h2>
       {blogs.map((blog) => (
         <Post
+          key={blog.id}
           title={blog.title}
           description={blog.description}
           categories={blog.categories}

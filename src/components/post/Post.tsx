@@ -18,16 +18,16 @@ export default async function Post({
 }) {
   const creator = await getUserAsCreator(creatorId);
   return (
-    <article className="w-full h-full p-2 rounded-lg border-[1px]">
-      <div className="w-full h-full flex flex-col group relative">
+    <article className="@container w-full h-full p-2 rounded-lg border-[1px]">
+      <div className="w-full h-full flex flex-col @md:flex-row group relative">
         <Link
           href={postUrl}
-          className="h-[12rem] shrink-0 w-full mx-auto overflow-clip rounded-lg bg-[#EBEEF3] cursor-pointer"
+          className="h-[12rem] @lg:shrink-0 w-full @md:w-52 mx-auto overflow-clip rounded-lg bg-[#EBEEF3] cursor-pointer"
         >
           <img src={""} alt="" className="object-cover" />
         </Link>
-        <div className="flex flex-col gap-2 px-2 flex-1">
-          <div className="flex gap-1 mt-2 text-xs font-medium text-violet-600 w-fit h-fit">
+        <div className="flex flex-col gap-2 px-2 flex-1 @md:ml-2 @md:py-2">
+          <div className="flex gap-1 mt-2 @md:mt-0 text-xs font-medium text-violet-600 w-fit h-fit">
             {categories.map((category) => (
               <Link href={`/category/${category}`} key={category}>
                 <section className=" p-1 bg-violet-100 w-fit rounded-md">
@@ -42,7 +42,7 @@ export default async function Post({
             </p>
             <p className="text-sm line-clamp-3">{description}</p>
           </Link>
-          <div className="mt-auto pt-2 flex gap-2 items-center text-xs">
+          <div className="mt-auto pt-2 flex @md:items-start @md:flex-col gap-2 items-center text-xs">
             <Link
               href={`/user/${creator?.id}`}
               className="flex gap-2 items-center"
@@ -52,7 +52,7 @@ export default async function Post({
               </div>
               <span className="opacity-75">{creator?.name}</span>
             </Link>
-            <span className="ml-auto opacity-75">
+            <span className="ml-auto opacity-75 @md:mt-auto @md:ml-0">
               {date.toLocaleString("default", { month: "long" }) +
                 " " +
                 date.getDate() +
