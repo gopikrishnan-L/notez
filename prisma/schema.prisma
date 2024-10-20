@@ -14,23 +14,27 @@ datasource db {
 }
 
 model Blog {
-  id          String    @id @default(uuid())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  title       String    @db.VarChar(255)
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  title       String   @db.VarChar(255)
   description String
   categories  String[]
-  channels    Channel[]
-  content     String?
-  creator     User      @relation(fields: [creatorId], references: [id])
+  content     String
+  channel     Channel? @relation("ChannelBlogs", fields: [channelId], references: [id])
+  creator     User     @relation(fields: [creatorId], references: [id])
   creatorId   String
+  channelId   Int?
 }
 
 model Channel {
   id          Int    @id @default(autoincrement())
   name        String
   description String
-  blogs       Blog[]
+  blogs       Blog[] @relation("ChannelBlogs")
+  users       User[] @relation("ChannelUsers")
+  admin       User   @relation("ChannelOwner", fields: [adminId], references: [id])
+  adminId     String
 }
 
 model Profile {
@@ -49,6 +53,8 @@ model User {
   role          Role      @default(USER)
   accounts      Account[]
   blogs         Blog[]
+  ownedChannels Channel[] @relation("ChannelOwner")
+  channels      Channel[] @relation("ChannelUsers")
   profile       Profile?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
