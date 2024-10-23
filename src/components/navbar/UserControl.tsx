@@ -11,7 +11,13 @@ import {
 import { LogOut } from "lucide-react";
 import Image from "next/image";
 
-export default function UserControl({ picture }: { picture: string }) {
+export default function UserControl({
+  picture,
+  name,
+}: {
+  picture: string;
+  name: string;
+}) {
   const [open, setOpen] = useState(null);
   return (
     <section className="hover:brightness-[75%] transition-[filter] rounded-full cursor-pointer">
@@ -21,7 +27,7 @@ export default function UserControl({ picture }: { picture: string }) {
             <Image
               src={picture}
               className="rounded-full"
-              alt=""
+              alt={name}
               width={40}
               height={40}
             />

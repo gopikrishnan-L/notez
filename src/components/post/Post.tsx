@@ -1,4 +1,5 @@
 import { getUserAsCreator } from "@/db/users";
+import Image from "next/image";
 import Link from "next/link";
 
 export default async function Post({
@@ -48,7 +49,13 @@ export default async function Post({
               className="flex gap-2 items-center"
             >
               <div className="w-8 aspect-square rounded-full overflow-hidden bg-gray-700">
-                <img src={creator?.image!} alt={creator?.name!} />
+                <Image
+                  src={creator?.image!}
+                  alt={creator?.name!}
+                  className="rounded-full"
+                  width={40}
+                  height={40}
+                />
               </div>
               <span className="opacity-75">{creator?.name}</span>
             </Link>

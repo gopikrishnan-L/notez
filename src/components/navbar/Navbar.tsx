@@ -16,7 +16,10 @@ export default function Navbar({ session }: { session: Session | null }) {
       <section className="flex gap-6 items-center">
         {session && !session.error ? (
           <>
-            <UserControl picture={session.user?.image!} />
+            <UserControl
+              picture={session.user?.image!}
+              name={session.user?.name!}
+            />
           </>
         ) : (
           <form
