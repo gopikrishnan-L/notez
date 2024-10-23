@@ -14,17 +14,20 @@ datasource db {
 }
 
 model Blog {
-  id          String   @id @default(uuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  title       String   @db.VarChar(255)
-  description String
-  categories  String[]
-  content     String
-  channel     Channel? @relation("ChannelBlogs", fields: [channelId], references: [id])
-  creator     User     @relation(fields: [creatorId], references: [id])
-  creatorId   String
-  channelId   Int?
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  title        String   @db.VarChar(255)
+  description  String
+  categories   String[]
+  content      String
+  likesCount   Int      @default(0)
+  likedBy      User[]   @relation("Likes")
+  bookmarkedBy User[]   @relation("Bookmarks")
+  channel      Channel? @relation("ChannelBlogs", fields: [channelId], references: [id])
+  creator      User     @relation(fields: [creatorId], references: [id])
+  creatorId    String
+  channelId    Int?
 }
 
 model Channel {
@@ -45,19 +48,21 @@ model Profile {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  name          String?
-  emailVerified DateTime?
-  image         String?
-  role          Role      @default(USER)
-  accounts      Account[]
-  blogs         Blog[]
-  ownedChannels Channel[] @relation("ChannelOwner")
-  channels      Channel[] @relation("ChannelUsers")
-  profile       Profile?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id              String    @id @default(cuid())
+  email           String    @unique
+  name            String?
+  emailVerified   DateTime?
+  image           String?
+  role            Role      @default(USER)
+  accounts        Account[]
+  blogs           Blog[]
+  likedBlogs      Blog[]    @relation("Likes")
+  bookmarkedBlogs Blog[]    @relation("Bookmarks")
+  ownedChannels   Channel[] @relation("ChannelOwner")
+  channels        Channel[] @relation("ChannelUsers")
+  profile         Profile?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }
 
 model Account {
