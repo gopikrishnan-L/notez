@@ -18,8 +18,8 @@ export default function PostInteraction({
   likesCount: number;
   likedByUser: boolean;
   bookmarkedByUser: boolean;
-  onLike: () => Promise<boolean>;
-  onBookmark: () => Promise<boolean>;
+  onLike: () => Promise<boolean | null>;
+  onBookmark: () => Promise<boolean | null>;
 }) {
   const [likes, setLikes] = useState(likesCount);
   const [liked, setLiked] = useState(likedByUser);
@@ -36,13 +36,17 @@ export default function PostInteraction({
             session?.user
               ? async () => {
                   const updatedLike = await onLike();
-                  if (updatedLike) {
-                    setLikes(likes + 1);
+                  if (updatedLike != null) {
+                    if (updatedLike === true) {
+                      setLikes(likes + 1);
+                    } else if (updatedLike === false) {
+                      //already liked so dislike
+                      setLikes(likes - 1);
+                    }
+                    setLiked(updatedLike);
                   } else {
-                    //already liked so dislike
-                    setLikes(likes - 1);
+                    console.log("not signed in");
                   }
-                  setLiked(updatedLike);
                 }
               : () => {
                   console.log("not signed in");
@@ -59,7 +63,11 @@ export default function PostInteraction({
             session?.user
               ? async () => {
                   const updatedBookmark = await onBookmark();
-                  setBookmarked(updatedBookmark);
+                  if (updatedBookmark != null) {
+                    setBookmarked(updatedBookmark);
+                  } else {
+                    console.log("not signed in");
+                  }
                 }
               : () => {
                   console.log("not signed in");

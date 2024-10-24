@@ -14,13 +14,21 @@ export default async function Post({
 }) {
   const onLike = async () => {
     "use server";
-    const updatedLike = await toggleLike(blog.id, blog.creatorId);
-    return updatedLike;
+    if (session?.user?.id) {
+      const updatedLike = await toggleLike(blog.id, session?.user?.id);
+      return updatedLike;
+    } else {
+      return null;
+    }
   };
   const onBookmark = async () => {
     "use server";
-    const updatedBookmark = await toggleBookmark(blog.id, blog.creatorId);
-    return updatedBookmark;
+    if (session?.user?.id) {
+      const updatedBookmark = await toggleBookmark(blog.id, session?.user?.id);
+      return updatedBookmark;
+    } else {
+      return null;
+    }
   };
 
   const postUrl = `/blog/${blog.id}`;
