@@ -3,19 +3,24 @@ import { auth } from "@/lib/auth";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { toggleLike } from "@/db/blogs";
+import { toggleBookmark, toggleLike } from "@/db/blogs";
 import PostInteraction from "./PostInteraction";
 import { Blog, User } from "@prisma/client";
 
 export default async function Post({
   blog,
 }: {
-  blog: { likedBy: User[] } & Blog;
+  blog: { likedBy: User[]; bookmarkedBy: User[] } & Blog;
 }) {
   const onLike = async () => {
     "use server";
     const updatedLike = await toggleLike(blog.id, blog.creatorId);
     return updatedLike;
+  };
+  const onBookmark = async () => {
+    "use server";
+    const updatedBookmark = await toggleBookmark(blog.id, blog.creatorId);
+    return updatedBookmark;
   };
 
   const postUrl = `/blog/${blog.id}`;
@@ -23,6 +28,9 @@ export default async function Post({
   const creator = await getUserAsCreator(blog.creatorId);
   const likedByUser = blog.likedBy.some(
     (liker) => liker.id === session?.user?.id
+  );
+  const bookmarkedByUser = blog.bookmarkedBy.some(
+    (bookmarker) => bookmarker.id === session?.user?.id
   );
 
   return (
@@ -81,8 +89,10 @@ export default async function Post({
                 id={blog.id}
                 creatorId={blog.creatorId}
                 likesCount={blog.likesCount}
-                onLike={onLike}
                 likedByUser={likedByUser}
+                bookmarkedByUser={bookmarkedByUser}
+                onLike={onLike}
+                onBookmark={onBookmark}
               />
             </div>
           </div>

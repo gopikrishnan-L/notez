@@ -1,20 +1,22 @@
 import prisma from "@/lib/db";
 
 export async function getAllBlogs() {
-  return await prisma.blog.findMany({ include: { likedBy: true } });
+  return await prisma.blog.findMany({
+    include: { likedBy: true, bookmarkedBy: true },
+  });
 }
 
 export async function getBlogById(id: string) {
   return await prisma.blog.findUnique({
     where: { id },
-    include: { likedBy: true },
+    include: { likedBy: true, bookmarkedBy: true },
   });
 }
 
 export async function getBlogByCategories(category: string[]) {
   return await prisma.blog.findMany({
     where: { categories: { hasEvery: [...category] } },
-    include: { likedBy: true },
+    include: { likedBy: true, bookmarkedBy: true },
   });
 }
 
@@ -23,7 +25,7 @@ export async function getBlogsByUserId(userId: string) {
     where: {
       creatorId: userId,
     },
-    include: { likedBy: true },
+    include: { likedBy: true, bookmarkedBy: true },
   });
 }
 
@@ -40,7 +42,7 @@ export async function toggleLike(id: string, userId: string) {
         likedBy: { disconnect: { id: userId } },
       },
     });
-    // console.log("user disliked");
+    // console.log("user unliked");
     return false;
   }
 
@@ -53,5 +55,32 @@ export async function toggleLike(id: string, userId: string) {
   });
 
   //console.log("user liked")
+  return true;
+}
+
+export async function toggleBookmark(id: string, userId: string) {
+  const alreadyBookmarked = await prisma.blog.findFirst({
+    where: { id, bookmarkedBy: { some: { id: userId } } },
+  });
+
+  if (alreadyBookmarked) {
+    await prisma.blog.update({
+      where: { id },
+      data: {
+        bookmarkedBy: { disconnect: { id: userId } },
+      },
+    });
+    // console.log("user unbookmarked");
+    return false;
+  }
+
+  await prisma.blog.update({
+    where: { id },
+    data: {
+      bookmarkedBy: { connect: { id: userId } },
+    },
+  });
+
+  //console.log("user bookmarked")
   return true;
 }
