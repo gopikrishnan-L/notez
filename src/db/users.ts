@@ -7,7 +7,10 @@ export async function getUserById(
   const { includeProfile = false, includeBlogs = false } = options;
   return await prisma.user.findUnique({
     where: { id },
-    include: { profile: includeProfile, blogs: includeBlogs },
+    include: {
+      profile: includeProfile,
+      blogs: { include: { likedBy: includeBlogs } },
+    },
   });
 }
 

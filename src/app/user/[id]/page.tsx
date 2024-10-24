@@ -13,19 +13,9 @@ export default async function UserPage({ params }: { params: { id: string } }) {
         <h2 className="text-xl font-medium mb-4 p-2">
           {user?.name}'s Blogposts
         </h2>
-        <div className="grid grid-cols-3 gap-2 max-lg:w-full">
+        <div className="grid grid-cols-1 gap-2 max-lg:w-full">
           {user?.blogs &&
-            user?.blogs.map((blog) => (
-              <Post
-                key={blog.id}
-                title={blog.title}
-                description={blog.description}
-                categories={blog.categories}
-                creatorId={blog.creatorId}
-                date={blog.createdAt}
-                postUrl={`/blog/${blog.id}`}
-              />
-            ))}
+            user?.blogs.map((blog) => <Post key={blog.id} blog={blog} />)}
         </div>
       </div>
       {user && (

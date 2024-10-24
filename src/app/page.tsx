@@ -9,16 +9,11 @@ export default async function HomePage() {
     <div className="grid grid-cols-[3fr_1fr] max-w-[75rem] mx-auto gap-4 max-xl:max-w-[60rem] max-lg:max-w-[40rem] max-lg:grid-cols-1">
       <HighLights />
       <div className="w-full h-full text-lg font-semibold">Editors' Picks</div>
-      <div className="grid grid-cols-3 gap-2 max-lg:w-full lg:row-start-2">
+      <div className="grid grid-cols-1 gap-2 max-lg:w-full lg:row-start-2">
         {blogPosts.map((blog, i) => (
           <Post
             key={blog.id}
-            title={blog.title}
-            description={blog.description}
-            categories={blog.categories}
-            creatorId={blog.creatorId}
-            date={blog.createdAt}
-            postUrl={`/blog/${blog.id}`}
+            blog={blog}
           />
         ))}
       </div>

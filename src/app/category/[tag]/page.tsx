@@ -14,15 +14,7 @@ export default async function CategoryPage({
         <span className="font-semibold capitalize">{params.tag}</span>
       </h2>
       {blogs.map((blog) => (
-        <Post
-          key={blog.id}
-          title={blog.title}
-          description={blog.description}
-          categories={blog.categories}
-          date={blog.createdAt}
-          creatorId={blog.creatorId}
-          postUrl={`/blog/${blog.id}`}
-        />
+        <Post key={blog.id} blog={blog} />
       ))}
     </div>
   );
