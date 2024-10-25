@@ -14,20 +14,30 @@ datasource db {
 }
 
 model Blog {
-  id           String   @id @default(uuid())
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  title        String   @db.VarChar(255)
+  id           String    @id @default(uuid())
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  title        String    @db.VarChar(255)
   description  String
   categories   String[]
   content      String
-  likesCount   Int      @default(0)
-  likedBy      User[]   @relation("Likes")
-  bookmarkedBy User[]   @relation("Bookmarks")
-  channel      Channel? @relation("ChannelBlogs", fields: [channelId], references: [id])
-  creator      User     @relation(fields: [creatorId], references: [id])
+  likesCount   Int       @default(0)
+  likedBy      User[]    @relation("Likes")
+  bookmarkedBy User[]    @relation("Bookmarks")
+  comments     Comment[]
+  channel      Channel?  @relation("ChannelBlogs", fields: [channelId], references: [id])
+  creator      User      @relation(fields: [creatorId], references: [id])
   creatorId    String
   channelId    Int?
+}
+
+model Comment {
+  id      Int    @id @default(autoincrement())
+  content String
+  blog    Blog   @relation(fields: [blogId], references: [id])
+  user    User   @relation(fields: [userId], references: [id])
+  blogId  String
+  userId  String
 }
 
 model Channel {
@@ -58,6 +68,7 @@ model User {
   blogs           Blog[]
   likedBlogs      Blog[]    @relation("Likes")
   bookmarkedBlogs Blog[]    @relation("Bookmarks")
+  comments        Comment[]
   ownedChannels   Channel[] @relation("ChannelOwner")
   channels        Channel[] @relation("ChannelUsers")
   profile         Profile?
