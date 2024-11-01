@@ -36,7 +36,7 @@ export default function UserControl({
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-48">
-          <Link href={`user/${profile}`}>
+          <Link href={`/user/${profile}`}>
             <DropdownMenuItem>
               <User className="mr-4 h-4 w-4" />
               <span>My Profile</span>

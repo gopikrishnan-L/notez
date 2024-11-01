@@ -46,11 +46,11 @@ export default async function Post({
       <div className="w-full h-full flex flex-col @md:flex-row group relative">
         <Link
           href={postUrl}
-          className="h-[12rem] @lg:shrink-0 w-full @md:w-52 mx-auto overflow-clip rounded-lg bg-[#EBEEF3] cursor-pointer"
+          className="h-[12rem] @md:h-full @lg:shrink-0 w-full @md:w-52 mx-auto overflow-clip rounded-lg bg-[#EBEEF3] cursor-pointer"
         >
           <img src={""} alt="" className="object-cover" />
         </Link>
-        <div className="flex flex-col gap-2 px-2 flex-1 @md:ml-2 @md:py-2">
+        <div className="flex flex-col gap-2 px-2 flex-1 @md:ml-2 @md:pt-2">
           <div className="flex gap-1 mt-2 @md:mt-0 text-xs font-medium text-violet-600 w-fit h-fit">
             {blog.categories.map((category) => (
               <Link href={`/category/${category}`} key={category}>
@@ -66,8 +66,8 @@ export default async function Post({
             </p>
             <p className="text-sm line-clamp-3">{blog.description}</p>
           </Link>
-          <div className="w-full flex justify-between items-center">
-            <div className="mt-auto pt-2 flex @md:items-start @md:flex-col gap-2 items-center text-xs">
+          <div className="w-full flex flex-col gap-2 justify-between">
+            <div className="mt-auto flex @md:items-start @md:flex-col gap12 items-center text-xs">
               <Link
                 href={`/user/${creator?.id}`}
                 className="flex gap-2 items-center"
@@ -91,7 +91,7 @@ export default async function Post({
                   blog.createdAt.getFullYear()}
               </span>
             </div>
-            <div className="h-full">
+            <div>
               <PostInteraction
                 session={session}
                 likesCount={blog.likesCount}
