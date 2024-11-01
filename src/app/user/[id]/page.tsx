@@ -1,6 +1,6 @@
 import Post from "@/components/post/Post";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { getUserById } from "@/db/users";
-import Image from "next/image";
 
 export default async function UserPage({ params }: { params: { id: string } }) {
   const user = await getUserById(params.id, {
@@ -20,14 +20,15 @@ export default async function UserPage({ params }: { params: { id: string } }) {
       </div>
       {user && (
         <div className="border-l-[1px] px-8">
-          <div className="h-20 aspect-square overflow-hidden rounded-full">
-            <Image
-              src={user?.image!}
-              alt={user?.name!}
-              width={80}
-              height={80}
-            />
-          </div>
+          <Avatar className="h-20 w-20">
+            <AvatarImage src={user?.image!} alt={user?.name!} />
+            <AvatarFallback>
+              {user?.name
+                ?.split(" ")
+                .map((name) => name.charAt(0))
+                .join("")}
+            </AvatarFallback>
+          </Avatar>
           <h3 className="mt-4 text-md font-medium">{user?.name}</h3>
           {user.profile && (
             <section className="mt-4 opacity-75">{user.profile.bio}</section>

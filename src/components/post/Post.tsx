@@ -1,11 +1,10 @@
 import { getUserAsCreator, getUserById } from "@/db/users";
 import { auth } from "@/lib/auth";
-import Image from "next/image";
 import Link from "next/link";
-import { Button } from "../ui/button";
 import { toggleBookmark, toggleLike } from "@/db/blogs";
 import PostInteraction from "./PostInteraction";
 import { Blog, User } from "@prisma/client";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 export default async function Post({
   blog,
@@ -73,15 +72,15 @@ export default async function Post({
                 href={`/user/${creator?.id}`}
                 className="flex gap-2 items-center"
               >
-                <div className="w-8 aspect-square rounded-full overflow-hidden bg-gray-700">
-                  <Image
-                    src={creator?.image!}
-                    alt={creator?.name!}
-                    className="rounded-full"
-                    width={40}
-                    height={40}
-                  />
-                </div>
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src={creator?.image!} alt={creator?.name!} />
+                  <AvatarFallback>
+                    {creator?.name
+                      ?.split(" ")
+                      .map((name) => name.charAt(0))
+                      .join("")}
+                  </AvatarFallback>
+                </Avatar>
                 <span className="opacity-75">{creator?.name}</span>
               </Link>
               <span className="ml-auto opacity-75 @md:mt-auto @md:ml-0">

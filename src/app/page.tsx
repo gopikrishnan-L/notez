@@ -11,10 +11,7 @@ export default async function HomePage() {
       <div className="w-full h-full text-lg font-semibold">Editors' Picks</div>
       <div className="grid grid-cols-1 gap-2 max-lg:w-full lg:row-start-2">
         {blogPosts.map((blog, i) => (
-          <Post
-            key={blog.id}
-            blog={blog}
-          />
+          <Post key={blog.id} blog={blog} />
         ))}
       </div>
     </div>

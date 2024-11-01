@@ -1,8 +1,7 @@
 import { getBlogById } from "@/db/blogs";
 import { getCommentsByBlogId } from "@/db/comments";
 import { getUserAsCreator } from "@/db/users";
-import prisma from "@/lib/db";
-import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 
 export default async function BlogPage({ params }: { params: { id: string } }) {
@@ -19,9 +18,15 @@ export default async function BlogPage({ params }: { params: { id: string } }) {
         <h3 className="text-2xl mt-4 font-light">{blog?.description}</h3>
         <section className="flex mt-8 gap-2 pt-2 items-center w-fit">
           <Link href={`/user/${creator?.id}`}>
-            <div className="w-10 aspect-square rounded-full overflow-hidden bg-gray-700">
-              <img src={creator?.image!} alt={creator?.name!} />
-            </div>
+            <Avatar>
+              <AvatarImage src={creator?.image!} alt={creator?.name!} />
+              <AvatarFallback>
+                {creator?.name
+                  ?.split(" ")
+                  .map((name) => name.charAt(0))
+                  .join("")}
+              </AvatarFallback>
+            </Avatar>
           </Link>
           <div className="flex flex-col gap-1">
             <Link href={`/user/${creator?.id}`}>
@@ -56,14 +61,26 @@ async function Comments({ blogId }: { blogId: string }) {
           {comments.map((comment) => (
             <article key={comment.id}>
               <div className="flex gap-2 items-center">
-                <div className="h-8 aspect-square overflow-hidden rounded-full">
+                <Avatar className="h-8 w-8">
+                  <AvatarImage
+                    src={comment?.user?.image!}
+                    alt={comment?.user?.name!}
+                  />
+                  <AvatarFallback>
+                    {comment?.user?.name
+                      ?.split(" ")
+                      .map((name) => name.charAt(0))
+                      .join("")}
+                  </AvatarFallback>
+                </Avatar>
+                {/* <div className="h-8 aspect-square overflow-hidden rounded-full">
                   <Image
                     src={comment.user.image!}
                     alt={comment.user.name!}
                     height={40}
                     width={40}
                   />
-                </div>
+                </div> */}
                 <div>{comment.user.name}</div>
               </div>
               <div className="pl-10">{comment.content}</div>

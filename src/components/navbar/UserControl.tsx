@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { LogOut } from "lucide-react";
-import Image from "next/image";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 export default function UserControl({
   picture,
@@ -23,15 +23,15 @@ export default function UserControl({
     <section className="hover:brightness-[75%] transition-[filter] rounded-full cursor-pointer">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <div className="w-10 aspect-square rounded-full bg-white">
-            <Image
-              src={picture}
-              className="rounded-full"
-              alt={name}
-              width={40}
-              height={40}
-            />
-          </div>
+          <Avatar>
+            <AvatarImage src={picture} alt={name} />
+            <AvatarFallback>
+              {name
+                ?.split(" ")
+                .map((name) => name.charAt(0))
+                .join("")}
+            </AvatarFallback>
+          </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-48">
           <DropdownMenuItem
