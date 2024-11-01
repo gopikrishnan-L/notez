@@ -1,8 +1,10 @@
 import { getBlogById } from "@/db/blogs";
-import { getCommentsByBlogId } from "@/db/comments";
+import { createComment, getCommentsByBlogId } from "@/db/comments";
 import { getUserAsCreator } from "@/db/users";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
+import { auth, signIn } from "@/lib/auth";
+import CommentsSection from "./comments-section";
 
 export default async function BlogPage({ params }: { params: { id: string } }) {
   const blog = await getBlogById(params.id);
@@ -45,49 +47,14 @@ export default async function BlogPage({ params }: { params: { id: string } }) {
           {blog?.content}
         </article>
       </div>
-      <Comments blogId={blog?.id!} />
+      <div className="text-xl font-semibold mt-12">Comments</div>
+      <CommentsSectionWrapper blogId={blog?.id!} />
     </div>
   );
 }
 
-async function Comments({ blogId }: { blogId: string }) {
+async function CommentsSectionWrapper({ blogId }: { blogId: string }) {
   const comments = await getCommentsByBlogId(blogId);
 
-  return (
-    <div className="mt-4">
-      <div className="text-xl font-semibold">Comments</div>
-      {comments && (
-        <div className="flex flex-col gap-4 text-sm p-4">
-          {comments.map((comment) => (
-            <article key={comment.id}>
-              <div className="flex gap-2 items-center">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage
-                    src={comment?.user?.image!}
-                    alt={comment?.user?.name!}
-                  />
-                  <AvatarFallback>
-                    {comment?.user?.name
-                      ?.split(" ")
-                      .map((name) => name.charAt(0))
-                      .join("")}
-                  </AvatarFallback>
-                </Avatar>
-                {/* <div className="h-8 aspect-square overflow-hidden rounded-full">
-                  <Image
-                    src={comment.user.image!}
-                    alt={comment.user.name!}
-                    height={40}
-                    width={40}
-                  />
-                </div> */}
-                <div>{comment.user.name}</div>
-              </div>
-              <div className="pl-10">{comment.content}</div>
-            </article>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+  return <CommentsSection comments={comments} blogId={blogId} />;
 }
