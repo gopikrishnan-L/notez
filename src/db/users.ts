@@ -9,7 +9,24 @@ export async function getUserById(
     where: { id },
     include: {
       profile: includeProfile,
-      blogs: { include: { likedBy: includeBlogs, bookmarkedBy: includeBlogs } },
+      blogs: {
+        include: {
+          likedBy: includeBlogs,
+          bookmarkedBy: includeBlogs,
+        },
+      },
+      likedBlogs: {
+        include: {
+          likedBy: includeBlogs,
+          bookmarkedBy: includeBlogs,
+        },
+      },
+      bookmarkedBlogs: {
+        include: {
+          likedBy: includeBlogs,
+          bookmarkedBy: includeBlogs,
+        },
+      },
     },
   });
 }
