@@ -12,6 +12,17 @@ export default async function Post({
 }: {
   blog: { likedBy: User[]; bookmarkedBy: User[] } & Blog;
 }) {
+  const session = await auth();
+  const creator = await getUserAsCreator(blog.creatorId);
+
+  const postUrl = `/blog/${blog.id}`;
+  const likedByUser = blog.likedBy.some(
+    (liker) => liker.id === session?.user?.id
+  );
+  const bookmarkedByUser = blog.bookmarkedBy.some(
+    (bookmarker) => bookmarker.id === session?.user?.id
+  );
+
   const onLike = async () => {
     "use server";
     if (session?.user?.id) {
@@ -30,16 +41,6 @@ export default async function Post({
       return null;
     }
   };
-
-  const postUrl = `/blog/${blog.id}`;
-  const session = await auth();
-  const creator = await getUserAsCreator(blog.creatorId);
-  const likedByUser = blog.likedBy.some(
-    (liker) => liker.id === session?.user?.id
-  );
-  const bookmarkedByUser = blog.bookmarkedBy.some(
-    (bookmarker) => bookmarker.id === session?.user?.id
-  );
 
   return (
     <article className="@container w-full h-full p-2 rounded-lg border-[1px]">
@@ -94,8 +95,6 @@ export default async function Post({
             <div className="h-full">
               <PostInteraction
                 session={session}
-                id={blog.id}
-                creatorId={blog.creatorId}
                 likesCount={blog.likesCount}
                 likedByUser={likedByUser}
                 bookmarkedByUser={bookmarkedByUser}

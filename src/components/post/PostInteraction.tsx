@@ -3,6 +3,7 @@
 import { Session } from "next-auth";
 import { Bookmark, ThumbsUp } from "lucide-react";
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 
 export default function PostInteraction({
   session,
@@ -13,8 +14,6 @@ export default function PostInteraction({
   onBookmark,
 }: {
   session: Session | null;
-  id: string;
-  creatorId: string;
   likesCount: number;
   likedByUser: boolean;
   bookmarkedByUser: boolean;
@@ -24,6 +23,7 @@ export default function PostInteraction({
   const [likes, setLikes] = useState(likesCount);
   const [liked, setLiked] = useState(likedByUser);
   const [bookmarked, setBookmarked] = useState(bookmarkedByUser);
+
   return (
     <div className="flex gap-2 items-end h-full">
       <div className="flex gap-1">
@@ -45,11 +45,13 @@ export default function PostInteraction({
                     }
                     setLiked(updatedLike);
                   } else {
-                    console.log("not signed in");
+                    console.log("not signed in like");
+                    await signIn("google");
                   }
                 }
-              : () => {
+              : async () => {
                   console.log("not signed in");
+                  await signIn("google");
                 }
           }
         />
@@ -67,10 +69,12 @@ export default function PostInteraction({
                     setBookmarked(updatedBookmark);
                   } else {
                     console.log("not signed in");
+                    await signIn("google");
                   }
                 }
-              : () => {
+              : async () => {
                   console.log("not signed in");
+                  await signIn("google");
                 }
           }
         />
