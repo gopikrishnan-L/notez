@@ -19,6 +19,7 @@ export default function Navbar({ session }: { session: Session | null }) {
             <UserControl
               picture={session.user?.image!}
               name={session.user?.name!}
+              profile={session.user?.id!}
             />
           </>
         ) : (

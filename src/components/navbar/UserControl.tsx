@@ -1,22 +1,24 @@
 "use client";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { LogOut } from "lucide-react";
+import { LogOut, User } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import Link from "next/link";
 
 export default function UserControl({
   picture,
   name,
+  profile,
 }: {
   picture: string;
   name: string;
+  profile: string;
 }) {
   const [open, setOpen] = useState(null);
   return (
@@ -34,6 +36,12 @@ export default function UserControl({
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-48">
+          <Link href={`user/${profile}`}>
+            <DropdownMenuItem>
+              <User className="mr-4 h-4 w-4" />
+              <span>My Profile</span>
+            </DropdownMenuItem>
+          </Link>
           <DropdownMenuItem
             onClick={() => {
               signOut();
