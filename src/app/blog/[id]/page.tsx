@@ -48,13 +48,7 @@ export default async function BlogPage({ params }: { params: { id: string } }) {
         </article>
       </div>
       <div className="text-xl font-semibold mt-12">Comments</div>
-      <CommentsSectionWrapper blogId={blog?.id!} />
+      <CommentsSection blogId={blog?.id!} />
     </div>
   );
-}
-
-async function CommentsSectionWrapper({ blogId }: { blogId: string }) {
-  const comments = await getCommentsByBlogId(blogId);
-
-  return <CommentsSection comments={comments} blogId={blogId} />;
 }
