@@ -13,7 +13,6 @@ type CommentType = {
 
 const commentsFetcher = (url: string) =>
   fetch(url).then((res) => {
-    console.log(JSON.stringify(res.json));
     return res.json();
   });
 

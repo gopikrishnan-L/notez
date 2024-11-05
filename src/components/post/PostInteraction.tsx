@@ -2,27 +2,84 @@
 
 import { Session } from "next-auth";
 import { Bookmark, Heart, ThumbsUp } from "lucide-react";
-import { useState } from "react";
 import { signIn } from "next-auth/react";
+import useSWR from "swr";
+import { Skeleton } from "../ui/skeleton";
+import { onBookmark, onLike } from "./actions";
 
-export default function PostInteraction({
-  session,
-  likesCount,
-  likedByUser,
-  bookmarkedByUser,
-  onLike,
-  onBookmark,
-}: {
-  session: Session | null;
+const blogInteractionsFetcher = (
+  url: string
+): Promise<{
   likesCount: number;
   likedByUser: boolean;
   bookmarkedByUser: boolean;
-  onLike: () => Promise<boolean | null>;
-  onBookmark: () => Promise<boolean | null>;
+}> =>
+  fetch(url).then((res) => {
+    return res.json();
+  });
+
+export default function PostInteraction({
+  blogId,
+  session,
+}: {
+  blogId: string;
+  session: Session | null;
 }) {
-  const [likes, setLikes] = useState(likesCount);
-  const [liked, setLiked] = useState(likedByUser);
-  const [bookmarked, setBookmarked] = useState(bookmarkedByUser);
+  const {
+    data: interactions,
+    isLoading,
+    mutate,
+  } = useSWR(`/api/blog/${blogId}/interactions`, blogInteractionsFetcher);
+
+  async function likeMutator() {
+    const liked = await onLike(blogId);
+    if (interactions) {
+      return {
+        likesCount: liked
+          ? interactions?.likesCount + 1
+          : interactions?.likesCount - 1,
+        likedByUser: liked ? true : false,
+        bookmarkedByUser: interactions?.bookmarkedByUser,
+      };
+    }
+  }
+
+  async function bookmarkMutator() {
+    const bookmarked = await onBookmark(blogId);
+    if (interactions) {
+      return {
+        likesCount: interactions?.likesCount,
+        likedByUser: interactions?.likedByUser,
+        bookmarkedByUser: bookmarked ? true : false,
+      };
+    }
+  }
+
+  const likeMutateOptions = (likesCount: number, likedByUser: boolean) => ({
+    optimisticData: {
+      likesCount: !likedByUser ? likesCount + 1 : likesCount - 1,
+      likedByUser: !likedByUser,
+      bookmarkedByUser: interactions?.bookmarkedByUser!,
+    },
+    rollbackOnError: true,
+    populateCache: true,
+    revalidate: false,
+  });
+
+  const bookmarkMutateOptions = (bookmarkedByUser: boolean) => {
+    return {
+      optimisticData: {
+        likesCount: interactions?.likesCount!,
+        likedByUser: interactions?.likedByUser!,
+        bookmarkedByUser: !bookmarkedByUser,
+      },
+      rollbackOnError: true,
+      populateCache: true,
+      revalidate: false,
+    };
+  };
+
+  if (isLoading) return <Skeleton className="h-8 w-32 mt-2" />;
 
   return (
     <div className="flex gap-4 items-center mt-2">
@@ -31,18 +88,14 @@ export default function PostInteraction({
         onClick={
           session?.user
             ? async () => {
-                const updatedLike = await onLike();
-                if (updatedLike != null) {
-                  if (updatedLike === true) {
-                    setLikes(likes + 1);
-                  } else if (updatedLike === false) {
-                    //already liked so dislike
-                    setLikes(likes - 1);
-                  }
-                  setLiked(updatedLike);
-                } else {
-                  console.log("not signed in like");
-                  await signIn("google");
+                if (interactions) {
+                  await mutate(
+                    likeMutator(),
+                    likeMutateOptions(
+                      interactions.likesCount,
+                      interactions.likedByUser
+                    )
+                  );
                 }
               }
             : async () => {
@@ -53,14 +106,16 @@ export default function PostInteraction({
       >
         <div
           className={`flex items-end tabular-nums ${
-            liked ? "text-red-500" : "text-black"
+            interactions?.likedByUser ? "text-red-500" : "text-black"
           } select-none`}
         >
-          {likes}
+          {interactions?.likesCount}
         </div>
         <Heart
           className={`h-5 w-5 group-hover/like:stroke-red-500 ${
-            liked ? "fill-red-500 stroke-red-500" : "fill-none"
+            interactions?.likedByUser
+              ? "fill-red-500 stroke-red-500"
+              : "fill-none"
           }`}
         />
       </div>
@@ -69,12 +124,11 @@ export default function PostInteraction({
         onClick={
           session?.user
             ? async () => {
-                const updatedBookmark = await onBookmark();
-                if (updatedBookmark != null) {
-                  setBookmarked(updatedBookmark);
-                } else {
-                  console.log("not signed in");
-                  await signIn("google");
+                if (interactions) {
+                  await mutate(
+                    bookmarkMutator(),
+                    bookmarkMutateOptions(interactions.bookmarkedByUser)
+                  );
                 }
               }
             : async () => {
@@ -85,7 +139,9 @@ export default function PostInteraction({
       >
         <Bookmark
           className={`h-5 w-5 ${
-            bookmarked ? "fill-orange-400 stroke-orange-400" : "fill-none"
+            interactions?.bookmarkedByUser
+              ? "fill-orange-400 stroke-orange-400"
+              : "fill-none"
           }`}
         />
       </div>

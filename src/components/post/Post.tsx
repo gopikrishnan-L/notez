@@ -1,45 +1,15 @@
-import { getUserAsCreator, getUserById } from "@/db/users";
+import { getUserAsCreator } from "@/db/users";
 import { auth } from "@/lib/auth";
 import Link from "next/link";
-import { toggleBookmark, toggleLike } from "@/db/blogs";
 import PostInteraction from "./PostInteraction";
-import { Blog, User } from "@prisma/client";
+import { Blog } from "@prisma/client";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
-export default async function Post({
-  blog,
-}: {
-  blog: { likedBy: User[]; bookmarkedBy: User[] } & Blog;
-}) {
+export default async function Post({ blog }: { blog: Blog }) {
   const session = await auth();
   const creator = await getUserAsCreator(blog.creatorId);
 
   const postUrl = `/blog/${blog.id}`;
-  const likedByUser = blog.likedBy.some(
-    (liker) => liker.id === session?.user?.id
-  );
-  const bookmarkedByUser = blog.bookmarkedBy.some(
-    (bookmarker) => bookmarker.id === session?.user?.id
-  );
-
-  const onLike = async () => {
-    "use server";
-    if (session?.user?.id) {
-      const updatedLike = await toggleLike(blog.id, session?.user?.id);
-      return updatedLike;
-    } else {
-      return null;
-    }
-  };
-  const onBookmark = async () => {
-    "use server";
-    if (session?.user?.id) {
-      const updatedBookmark = await toggleBookmark(blog.id, session?.user?.id);
-      return updatedBookmark;
-    } else {
-      return null;
-    }
-  };
 
   return (
     <article className="@container w-full h-full p-2 rounded-lg border-[1px]">
@@ -92,14 +62,7 @@ export default async function Post({
               </span>
             </div>
             <div>
-              <PostInteraction
-                session={session}
-                likesCount={blog.likesCount}
-                likedByUser={likedByUser}
-                bookmarkedByUser={bookmarkedByUser}
-                onLike={onLike}
-                onBookmark={onBookmark}
-              />
+              <PostInteraction blogId={blog.id} session={session} />
             </div>
           </div>
         </div>
