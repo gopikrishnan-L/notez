@@ -7,7 +7,7 @@ export default async function ChannelPage({
 }: {
   params: { channel: string };
 }) {
-  const channelName = params.channel.replace("-", " ").toLowerCase();
+  const channelName = params.channel.replace("-", " ");
   const channel = await getChannelByName(channelName, { includeBlogs: true });
   if (!channel) return <div> No such channel exists</div>;
   return <div>{JSON.stringify(channel)}</div>;

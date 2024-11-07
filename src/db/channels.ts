@@ -1,4 +1,5 @@
 import prisma from "@/lib/db";
+import { inspect } from "util";
 
 export async function getChannelByName(
   name: string,
@@ -6,7 +7,27 @@ export async function getChannelByName(
 ) {
   const { includeBlogs = false } = options;
   return await prisma.channel.findFirst({
-    where: { name },
+    where: { name: { equals: name, mode: "insensitive" } },
     include: { blogs: includeBlogs },
+  });
+}
+
+export async function getChannelsByUserId(userId: string) {
+  return await prisma.channel.findMany({
+    where: { OR: [{ adminId: userId }, { users: { some: { id: userId } } }] },
+  });
+}
+
+export async function createChannel(
+  adminId: string,
+  name: string,
+  description: string
+) {
+  return await prisma.channel.create({
+    data: {
+      name,
+      description,
+      adminId,
+    },
   });
 }

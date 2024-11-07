@@ -1,13 +1,12 @@
 "use client";
 import { signOut } from "next-auth/react";
-import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, User } from "lucide-react";
+import { LogOut, Rss, User } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import Link from "next/link";
 
@@ -20,7 +19,18 @@ export default function UserControl({
   name: string;
   profile: string;
 }) {
-  const [open, setOpen] = useState(null);
+  const menuItems = [
+    {
+      link: `/user/${profile}`,
+      icon: <User className="mr-4 h-4 w-4" />,
+      text: "My Profile",
+    },
+    {
+      link: "/me/channels",
+      icon: <Rss className="mr-4 h-4 w-4" />,
+      text: "Manage Channels",
+    },
+  ];
   return (
     <section className="hover:brightness-[75%] transition-[filter] rounded-full cursor-pointer">
       <DropdownMenu>
@@ -36,12 +46,14 @@ export default function UserControl({
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-48">
-          <Link href={`/user/${profile}`}>
-            <DropdownMenuItem>
-              <User className="mr-4 h-4 w-4" />
-              <span>My Profile</span>
-            </DropdownMenuItem>
-          </Link>
+          {menuItems.map((menuItem) => (
+            <Link key={menuItem.text} href={menuItem.link}>
+              <DropdownMenuItem>
+                {menuItem.icon && menuItem.icon}
+                <span>{menuItem.text}</span>
+              </DropdownMenuItem>
+            </Link>
+          ))}
           <DropdownMenuItem
             onClick={() => {
               signOut();
