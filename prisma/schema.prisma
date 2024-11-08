@@ -19,6 +19,7 @@ model Blog {
   updatedAt    DateTime  @updatedAt
   title        String    @db.VarChar(255)
   description  String
+  image        String?
   categories   String[]
   content      String
   likesCount   Int       @default(0)
@@ -41,12 +42,14 @@ model Comment {
 }
 
 model Channel {
-  id          Int    @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   name        String
   description String
-  blogs       Blog[] @relation("ChannelBlogs")
-  users       User[] @relation("ChannelUsers")
-  admin       User   @relation("ChannelOwner", fields: [adminId], references: [id])
+  avatar       String?
+  backgroundImage       String?
+  blogs       Blog[]  @relation("ChannelBlogs")
+  users       User[]  @relation("ChannelUsers")
+  admin       User    @relation("ChannelOwner", fields: [adminId], references: [id])
   adminId     String
 }
 
