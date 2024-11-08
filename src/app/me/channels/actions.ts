@@ -1,14 +1,25 @@
 "use server";
 
 import { createChannel } from "@/db/channels";
-import { createComment } from "@/db/comments";
 import { auth, signIn } from "@/lib/auth";
+import utapi from "@/lib/uploadthing";
 
-export async function submitNewChannel(name: string, description: string) {
+export async function submitNewChannel(
+  name: string,
+  description: string,
+  avatarForm: any
+) {
   //need to refactor to include authenticated action middleware
   const session = await auth();
+  const avatarImage = avatarForm.get("avatar");
   if (session?.user?.id && !session.error) {
-    return await createChannel(session.user.id, name, description);
+    const avatarRes = await utapi.uploadFiles(avatarImage);
+    return await createChannel(
+      session.user.id,
+      name,
+      description,
+      avatarRes.data?.url
+    );
   } else {
     await signIn("google");
   }

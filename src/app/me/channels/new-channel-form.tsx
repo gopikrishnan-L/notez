@@ -16,28 +16,28 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { submitNewChannel } from "./actions";
 import { DialogClose } from "@/components/ui/dialog";
-
-const formSchema = z.object({
-  name: z.string().min(3, {
-    message: "Channel name must have at least 3 characters.",
-  }),
-  description: z.string().min(5, {
-    message: "Channel description must have at least 5 characters.",
-  }),
-});
+import { newChannelSchema } from "./schema";
+import { useState } from "react";
+import { ImageUp, Paperclip } from "lucide-react";
 
 export default function NewChannelForm() {
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const router = useRouter();
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof newChannelSchema>>({
+    resolver: zodResolver(newChannelSchema),
     defaultValues: {
       name: "",
       description: "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    await submitNewChannel(values.name, values.description);
+  async function onSubmit(values: z.infer<typeof newChannelSchema>) {
+    if (values?.avatarImage?.[0] instanceof File) {
+      const formData = new FormData();
+      const avatar = values.avatarImage?.[0];
+      formData.set("avatar", avatar);
+      await submitNewChannel(values?.name, values?.description, formData);
+    }
     router.refresh();
   }
   return (
@@ -88,6 +88,57 @@ export default function NewChannelForm() {
               </FormItem>
             )}
           />
+          <div className="flex gap-4">
+            {selectedImage ? (
+              <div className="md:max-w-[200px]">
+                <img src={URL.createObjectURL(selectedImage)} alt="Selected" />
+              </div>
+            ) : (
+              <div className="inline-flex items-center justify-between">
+                <div className="p-3 bg-slate-200  justify-center items-center flex">
+                  <ImageUp size={56} />
+                </div>
+              </div>
+            )}
+            <FormField
+              control={form.control}
+              name="avatarImage"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <div>
+                      <input
+                        type="file"
+                        className="hidden"
+                        id="fileInput"
+                        accept="image/*"
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                        onChange={(e) => {
+                          field.onChange(e.target.files);
+                          setSelectedImage(e.target.files?.[0] || null);
+                        }}
+                      />
+                      <label
+                        htmlFor="fileInput"
+                        className="p-2 text-neutral-90  rounded-md cursor-pointer inline-flex items-center"
+                      >
+                        <Paperclip />
+                        choose avatar image
+                      </label>
+                    </div>
+                  </FormControl>
+                  <FormDescription>
+                    Upload an avatar image to be displayed for your channel.
+                  </FormDescription>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
           <div className="w-full flex justify-end">
             <DialogClose asChild>
               <Button type="submit" className="bg-blue-600 hover:bg-blue-700">

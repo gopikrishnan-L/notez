@@ -42,10 +42,10 @@ export default async function MyChannelsPage() {
 function NewChannel() {
   return (
     <Dialog>
-      <DialogTrigger asChild className="px-0 w-fit">
+      <DialogTrigger asChild className="w-fit">
         <Button variant="link">New Channel +</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[900px] sm:max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Create New Channel</DialogTitle>
           <DialogDescription>Create your own channel.</DialogDescription>

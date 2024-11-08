@@ -21,13 +21,17 @@ export async function getChannelsByUserId(userId: string) {
 export async function createChannel(
   adminId: string,
   name: string,
-  description: string
+  description: string,
+  avatarUrl?: string,
+  bgImageUrl?: string
 ) {
   return await prisma.channel.create({
     data: {
       name,
       description,
       adminId,
+      avatar: avatarUrl,
+      backgroundImage: bgImageUrl,
     },
   });
 }
