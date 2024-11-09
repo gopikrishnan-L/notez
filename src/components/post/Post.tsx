@@ -4,6 +4,9 @@ import Link from "next/link";
 import PostInteraction from "./PostInteraction";
 import { Blog } from "@prisma/client";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import Image from "next/image";
+import { ImageOff } from "lucide-react";
+import CustomImage from "../CustomImage";
 
 export default async function Post({ blog }: { blog: Blog }) {
   const session = await auth();
@@ -14,11 +17,14 @@ export default async function Post({ blog }: { blog: Blog }) {
   return (
     <article className="@container w-full h-full p-2 rounded-lg border-[1px]">
       <div className="w-full h-full flex flex-col @md:flex-row group relative">
-        <Link
-          href={postUrl}
-          className="h-[12rem] @md:h-full @lg:shrink-0 w-full @md:w-52 mx-auto overflow-clip rounded-lg bg-[#EBEEF3] cursor-pointer"
-        >
-          <img src={""} alt="" className="object-cover" />
+        <Link href={postUrl}>
+          <div className="relative grid place-content-center h-[12rem] @md:h-full @lg:shrink-0 w-full @md:w-52 mx-auto overflow-clip rounded-lg bg-[#EBEEF3] cursor-pointer">
+            {blog.image ? (
+              <CustomImage url={blog.image} alt={blog.title} />
+            ) : (
+              <ImageOff size="2em" />
+            )}
+          </div>
         </Link>
         <div className="flex flex-col gap-2 px-2 flex-1 @md:ml-2 @md:pt-2">
           <div className="flex gap-1 mt-2 @md:mt-0 text-xs font-medium text-violet-600 w-fit h-fit">

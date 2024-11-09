@@ -11,6 +11,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import Image from "next/image";
+import { ImageOff } from "lucide-react";
+import CustomImage from "@/components/CustomImage";
 
 export default async function MyChannelsPage() {
   const session = await auth();
@@ -28,9 +31,20 @@ export default async function MyChannelsPage() {
         <NewChannel />
         {channels.map((channel) => (
           <Link key={channel.id} href={`/${createChannelUrl(channel.name)}`}>
-            <div className="w-full py-1 px-2 outline-gray-400 outline-1 rounded-lg hover:outline-2 outline-dashed transition-colors ">
-              <div className="text-xl">{channel.name}</div>
-              <div className="text-gray-500 text-sm">{channel.description}</div>
+            <div className="flex gap-2 h-fit w-full py-1 px-2 outline-gray-400 outline-1 rounded-lg hover:outline-2 outline-dashed transition-colors ">
+              <div className="relative grid place-content-center shrink-0 self-center h-[2rem] w-[4rem] max-w-[6rem] bg-[#EBEEF3] rounded-lg overflow-clip">
+                {channel.avatar ? (
+                  <CustomImage url={channel.avatar} alt={channel.name} />
+                ) : (
+                  <ImageOff size="1em" />
+                )}
+              </div>
+              <div>
+                <div className="text-xl">{channel.name}</div>
+                <div className="text-gray-500 text-sm">
+                  {channel.description}
+                </div>
+              </div>
             </div>
           </Link>
         ))}
