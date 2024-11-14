@@ -1,9 +1,7 @@
 import { getBlogById } from "@/db/blogs";
-import { createComment, getCommentsByBlogId } from "@/db/comments";
 import { getUserAsCreator } from "@/db/users";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
-import { auth, signIn } from "@/lib/auth";
 import CommentsSection from "./comments-section";
 
 export default async function BlogPage({ params }: { params: { id: string } }) {

@@ -3,6 +3,7 @@ import { Rubik } from "next/font/google";
 import "./globals.css";
 import { auth, signIn } from "@/lib/auth";
 import Navbar from "../components/navbar/Navbar";
+import { SessionProvider } from "next-auth/react";
 
 const playfair = Rubik({
   subsets: ["latin"],
@@ -31,10 +32,12 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${playfair.variable} min-h-screen`}>
         <div className="min-h-screen max-w-[75rem] mx-auto bg-mainbg">
-          <Navbar session={session} />
-          <main>
-            <div className="mt-8 mb-4">{children}</div>
-          </main>
+          <SessionProvider>
+            <Navbar session={session} />
+            <main>
+              <div className="mt-8 mb-4">{children}</div>
+            </main>
+          </SessionProvider>
         </div>
       </body>
     </html>

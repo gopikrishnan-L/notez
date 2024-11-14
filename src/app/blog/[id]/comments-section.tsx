@@ -3,8 +3,16 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Comment, User } from "@prisma/client";
 import CommentForm from "./comment-form";
-import { submitComment } from "./actions";
+import { submitComment, deleteCommentAction } from "./actions";
 import useSWR from "swr";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import { EllipsisVertical, Flag, Trash } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 type CommentType = {
   user: User;
@@ -30,6 +38,13 @@ export default function CommentsSection({ blogId }: { blogId: string }) {
       mutate();
     }
   }
+
+  async function onCommentDelete(commentId: number, userId: string) {
+    const deletedComment = await deleteCommentAction(commentId, userId);
+    if (deletedComment) {
+      mutate();
+    }
+  }
   return (
     <>
       <CommentForm submitComment={changeCommentsList} />
@@ -39,7 +54,11 @@ export default function CommentsSection({ blogId }: { blogId: string }) {
           {isLoading && <div>loading comments...</div>}
           {comments &&
             comments.map((comment: CommentType) => (
-              <UserComment comment={comment} />
+              <UserComment
+                key={comment.id}
+                comment={comment}
+                onDelete={onCommentDelete}
+              />
             ))}
         </div>
       </div>
@@ -47,9 +66,17 @@ export default function CommentsSection({ blogId }: { blogId: string }) {
   );
 }
 
-function UserComment({ comment }: { comment: CommentType }) {
+function UserComment({
+  comment,
+  onDelete,
+}: {
+  comment: CommentType;
+  onDelete: (commentId: number, userId: string) => Promise<void>;
+}) {
+  const { data: session } = useSession();
+
   return (
-    <article key={comment.id}>
+    <article className="relative">
       <div className="flex gap-2 items-center">
         <Avatar className="h-8 w-8">
           <AvatarImage src={comment?.user?.image!} alt={comment?.user?.name!} />
@@ -60,9 +87,36 @@ function UserComment({ comment }: { comment: CommentType }) {
               .join("")}
           </AvatarFallback>
         </Avatar>
-        <div>{comment.user.name}</div>
+        <div className="opacity-70">{comment.user.name}</div>
       </div>
       <div className="pl-10">{comment.content}</div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <div className="absolute right-0 top-2 hover:bg-secondary cursor-pointer rounded-full p-2">
+            <EllipsisVertical />
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-32">
+          {session?.user?.id === comment.userId && (
+            <DropdownMenuItem
+              onClick={async () => {
+                await onDelete(comment.id, comment.userId);
+              }}
+            >
+              <Trash className="mr-4 h-4 w-4" />
+              <span>Delete</span>
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuItem
+            onClick={async () => {
+              await onDelete(comment.id, comment.userId);
+            }}
+          >
+            <Flag className="mr-4 h-4 w-4" />
+            <span>Report</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </article>
   );
 }

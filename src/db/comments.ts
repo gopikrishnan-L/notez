@@ -24,3 +24,8 @@ export async function createComment(
     },
   });
 }
+export async function deleteComment(id: number) {
+  return await prisma.comment.delete({
+    where: { id },
+  });
+}
