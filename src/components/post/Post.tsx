@@ -18,7 +18,7 @@ export default async function Post({ blog }: { blog: Blog }) {
     <article className="@container w-full h-full p-2 rounded-lg border-[1px]">
       <div className="w-full h-full flex flex-col @md:flex-row group relative">
         <Link href={postUrl}>
-          <div className="relative grid place-content-center h-[12rem] @md:h-full @lg:shrink-0 w-full @md:w-52 mx-auto overflow-clip rounded-lg bg-[#EBEEF3] cursor-pointer">
+          <div className="relative grid place-content-center h-[12rem] @md:h-full @lg:shrink-0 w-full @md:w-52 mx-auto overflow-clip rounded-lg bg-secondary cursor-pointer">
             {blog.image ? (
               <CustomImage url={blog.image} alt={blog.title} />
             ) : (
